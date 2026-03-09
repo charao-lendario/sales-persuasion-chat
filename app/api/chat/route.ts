@@ -5,20 +5,20 @@ import { buildSystemPrompt } from '@/lib/system-prompt'
 export const maxDuration = 60
 
 export async function POST(req: Request) {
-  try {
-    const { messages } = await req.json()
-
-    const result = streamText({
-      model: openai('gpt-4o-mini'),
-      system: buildSystemPrompt(),
-      messages,
-    })
-
-    return result.toDataStreamResponse()
-  } catch (error) {
+  if (!process.env.OPENAI_API_KEY) {
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
+      JSON.stringify({ error: 'OPENAI_API_KEY not configured' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }
+
+  const { messages } = await req.json()
+
+  const result = streamText({
+    model: openai('gpt-4o-mini'),
+    system: buildSystemPrompt(),
+    messages,
+  })
+
+  return result.toDataStreamResponse()
 }
