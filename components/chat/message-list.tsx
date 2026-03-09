@@ -48,13 +48,15 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
           </div>
         )}
 
-        {messages.map((message) => (
-          <MessageBubble
-            key={message.id}
-            role={message.role}
-            content={message.content}
-          />
-        ))}
+        {messages
+          .filter((m) => m.role === 'user' || m.role === 'assistant')
+          .map((message) => (
+            <MessageBubble
+              key={message.id}
+              role={message.role as 'user' | 'assistant'}
+              content={message.content}
+            />
+          ))}
 
         {isLoading && messages[messages.length - 1]?.role === 'user' && (
           <div className="flex gap-3">
