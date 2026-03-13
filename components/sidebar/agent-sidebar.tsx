@@ -1,12 +1,13 @@
 import { AGENTS } from '@/lib/agents'
 import { AgentCard } from '@/components/sidebar/agent-card'
-import { X } from 'lucide-react'
+import { X, MessageSquarePlus } from 'lucide-react'
 
 interface AgentSidebarProps {
   onClose: () => void
+  onNewConversation?: () => void
 }
 
-export function AgentSidebar({ onClose }: AgentSidebarProps) {
+export function AgentSidebar({ onClose, onNewConversation }: AgentSidebarProps) {
   const orchestrator = AGENTS[0]
   const specialists = AGENTS.slice(1)
 
@@ -48,11 +49,15 @@ export function AgentSidebar({ onClose }: AgentSidebarProps) {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="mt-auto border-t border-surface-800 px-5 py-3">
-        <p className="text-[10px] text-surface-600 text-center">
-          Powered by Harvey Specter & Team
-        </p>
+      {/* New Conversation Button */}
+      <div className="mt-auto border-t border-surface-800 px-4 py-4">
+        <button
+          onClick={onNewConversation}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-gold-500/30 bg-gold-500/10 px-4 py-2.5 text-sm font-medium text-gold-400 transition-all hover:bg-gold-500/20 hover:border-gold-500/50"
+        >
+          <MessageSquarePlus className="h-4 w-4" />
+          Nova Conversa
+        </button>
       </div>
     </div>
   )

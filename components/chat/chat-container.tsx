@@ -1,13 +1,24 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useChat } from '@ai-sdk/react'
 import { MessageList } from '@/components/chat/message-list'
 import { ChatInput } from '@/components/chat/chat-input'
 
-export function ChatContainer() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error } = useChat({
+interface ChatContainerProps {
+  resetRef?: React.MutableRefObject<(() => void) | null>
+}
+
+export function ChatContainer({ resetRef }: ChatContainerProps) {
+  const { messages, input, handleInputChange, handleSubmit, isLoading, error, setMessages } = useChat({
     api: '/api/chat',
   })
+
+  useEffect(() => {
+    if (resetRef) {
+      resetRef.current = () => setMessages([])
+    }
+  }, [resetRef, setMessages])
 
   return (
     <div className="flex flex-1 flex-col min-h-0">

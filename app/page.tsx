@@ -1,12 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { ChatContainer } from '@/components/chat/chat-container'
 import { AgentSidebar } from '@/components/sidebar/agent-sidebar'
-import { Menu, X } from 'lucide-react'
+import { Menu } from 'lucide-react'
 
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const resetRef = useRef<(() => void) | null>(null)
+
+  const handleNewConversation = () => {
+    resetRef.current?.()
+    setSidebarOpen(false)
+  }
 
   return (
     <div className="flex h-screen bg-surface-950">
@@ -26,7 +32,7 @@ export default function Home() {
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
-        <AgentSidebar onClose={() => setSidebarOpen(false)} />
+        <AgentSidebar onClose={() => setSidebarOpen(false)} onNewConversation={handleNewConversation} />
       </aside>
 
       {/* Main content */}
@@ -44,7 +50,7 @@ export default function Home() {
           </h1>
         </div>
 
-        <ChatContainer />
+        <ChatContainer resetRef={resetRef} />
       </main>
     </div>
   )
